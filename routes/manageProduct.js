@@ -117,7 +117,7 @@ router.post('/search', async (req, res) => {
 
         const searchRegex = new RegExp(query, "i");
 
-        if (query === null && categoryID != null) {
+        if (query == "" && categoryID != "all") {
 
             const data = await Product.find({ categoryID: categoryID }).sort({ _id: -1 });
 
@@ -129,19 +129,35 @@ router.post('/search', async (req, res) => {
 
         }
 
-        const data = await Product.find({
-            $or: [
-                { name: searchRegex }
-            ],
-            categoryID: categoryID
-        })
+        if (query != "" && categoryID == "all") {
+            const data = await Product.find({
+                $or: [
+                    { name: searchRegex }
+                ]
+            })
 
-        if (!data) {
-            return res.send({ error: 'Opps! Search not found' })
+            if (!data) {
+                return res.send({ error: 'Opps! Search not found' })
+            }
+
+            return res.send(data)
         }
 
-        res.send(data)
 
+        if (query != "" && categoryID != "all") {
+            const data = await Product.find({
+                $or: [
+                    { name: searchRegex }
+                ],
+                categoryID: categoryID
+            })
+
+            if (!data) {
+                return res.send({ error: 'Opps! Search not found' })
+            }
+
+            res.send(data)
+        }
 
     } catch (error) {
         console.log(error.message)

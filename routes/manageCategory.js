@@ -70,6 +70,23 @@ router.post('/delete/:id', fetchAdmin, async (req, res) => {
 
 })
 
+router.post('/fetch/category-details', async (req, res) => {
+
+    try {
+
+        const { categoryID } = req.body
+
+        const data = await Category.findById(categoryID)
+
+        res.send(data)
+
+    } catch (error) {
+        console.log(error.message)
+        res.send({ error: "Internal Server Error" })
+    }
+
+})
+
 router.get('/fetch', async (req, res) => {
 
     try {
