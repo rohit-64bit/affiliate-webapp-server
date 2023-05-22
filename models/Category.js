@@ -11,6 +11,10 @@ const CategorySchema = new Schema({
     name: {
         type: String,
         require: true
+    },
+    isPinned: {
+        type: Boolean,
+        require: true
     }
 
 })

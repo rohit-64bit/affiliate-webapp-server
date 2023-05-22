@@ -24,12 +24,16 @@ router.post('/update/:id', fetchAdmin, async (req, res) => {
 
     try {
 
-        const { name } = req.body;
-
+        const { name, isPinned } = req.body;
+        console.log(req.body)
         const newData = {}
 
         if (name) {
             newData.name = name
+        }
+
+        if (isPinned) {
+            newData.isPinned = isPinned
         }
 
         let category = await Category.findById(req.params.id)
@@ -77,6 +81,21 @@ router.post('/fetch/category-details', async (req, res) => {
         const { categoryID } = req.body
 
         const data = await Category.findById(categoryID)
+
+        res.send(data)
+
+    } catch (error) {
+        console.log(error.message)
+        res.send({ error: "Internal Server Error" })
+    }
+
+})
+
+router.get('/fetch-pinned-category', async (req, res) => {
+
+    try {
+
+        const data = await Category.find({ isPinned: true }).sort({ _id: -1 }).exec()
 
         res.send(data)
 

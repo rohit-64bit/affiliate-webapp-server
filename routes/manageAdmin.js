@@ -15,7 +15,7 @@ const jwtSecret = env.JWT_SECRET_ADMIN;
 router.post('/createadmin', [
     body('email', 'Enter a valid e-mail').isEmail(),
     body('password', 'Password must be atleast 8 characters').isLength({ min: 8 })
-], async (req, res) => {
+], fetchAdmin, async (req, res) => {
 
     const { email, password } = req.body;
 
@@ -131,8 +131,6 @@ router.post('/change-password', fetchAdmin, async (req, res) => {
         const secPass = await bcrypt.hash(newPassword, salt);
 
         const updateAdminPassword = await Admin.findByIdAndUpdate(sessionAdminID, { password: secPass }, { new: true })
-
-        // send a info type email with message of password update
 
         res.json({
             "success": true,
